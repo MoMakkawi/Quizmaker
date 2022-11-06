@@ -23,6 +23,17 @@ public class StudentRepository : IAsyncStudent
         _mapper = mapper;
         _userRepository = userRepository;
     }
+    public async Task<AskQuestionResponse> AddQuestionAsync(AskQuestionRequest request)
+    {
+        var studentQuestion = _mapper.Map<StudentQuestion>(request);
+        await _dbContext.StudentQuestions.AddAsync(studentQuestion);
+        await _dbContext.SaveChangesAsync();
+
+        AskQuestionResponse response = new() { StudentQuestionId = studentQuestion.Id };
+       
+        return response;
+    }
+
     public async Task<List<GetAllQuizzesResponse>> GetAllQuizzes(GetAllQuizzesRequest request)
     {
         List<StudentQuiz> studentQuizzes = await _dbContext.StudentQuizzes!.ToListAsync();
@@ -156,5 +167,7 @@ public class StudentRepository : IAsyncStudent
 
         return teacher;
     }
+
+
     #endregion Helper Methods
 }

@@ -3,7 +3,6 @@
 using QuizMaker.Identity;
 using QuizMaker.Models;
 using QuizMaker.Models.DTOs;
-using QuizMaker.Requests.StudentRequests;
 using QuizMaker.Requests.TeacherRequests;
 using QuizMaker.Requests.UserRequests;
 using QuizMaker.Responses.UserResponses;
@@ -21,6 +20,9 @@ public class AutoMapperProfile : Profile
         CreateMap<StudentQuiz, Responses.StudentResponses.GetQuizByIdResponse>()
             .ReverseMap();
 
+        CreateMap<Requests.StudentRequests.AskQuestionRequest, StudentQuestion>()
+            .ForMember(src => src.Id, opt => opt.Ignore())
+            .ReverseMap();
 
         //teacher mapping
         CreateMap<AddQuizRequest, TeacherQuiz>()

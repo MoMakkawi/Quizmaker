@@ -17,5 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<TeacherQuiz>? TeacherQuizzes { get; set; }
     public DbSet<Teacher>? Teachers { get; set; }
     public DbSet<Student>? Students { get; set; }
+    public DbSet<StudentQuestion> StudentQuestions { get; set; }
+    public DbSet<TeacherAnswer> TeacherAnswers { get; set; }
 
 }
