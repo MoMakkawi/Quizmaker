@@ -10,11 +10,10 @@ namespace QuizMaker.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "Admins",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Level = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -23,7 +22,20 @@ namespace QuizMaker.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.PrimaryKey("PK_Admins", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentQuestions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,32 +55,38 @@ namespace QuizMaker.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Quizzes",
+                name: "TeacherAnswers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TeacherId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Mark = table.Column<double>(type: "float", nullable: true),
-                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    TeacherId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentQuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Quizzes", x => x.Id);
+                    table.PrimaryKey("PK_TeacherAnswers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Quizzes_Students_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Quizzes_Teachers_TeacherId1",
-                        column: x => x.TeacherId1,
-                        principalTable: "Teachers",
-                        principalColumn: "Id");
+                        name: "FK_TeacherAnswers_StudentQuestions_StudentQuestionId",
+                        column: x => x.StudentQuestionId,
+                        principalTable: "StudentQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Answer",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
+                    IsSelected = table.Column<bool>(type: "bit", nullable: false),
+                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answer", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,29 +100,56 @@ namespace QuizMaker.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Question", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Quizzes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Mark = table.Column<double>(type: "float", nullable: true),
+                    StudentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TeacherId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Quizzes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Question_Quizzes_QuizId",
-                        column: x => x.QuizId,
-                        principalTable: "Quizzes",
+                        name: "FK_Quizzes_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Quizzes_Teachers_TeacherId1",
+                        column: x => x.TeacherId1,
+                        principalTable: "Teachers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "RequiredStudent",
+                name: "Students",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StudentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Level = table.Column<int>(type: "int", nullable: false),
+                    TeacherQuizId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TeacherQuizId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Role = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequiredStudent", x => x.Id);
+                    table.PrimaryKey("PK_Students", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RequiredStudent_Quizzes_TeacherQuizId",
+                        name: "FK_Students_Quizzes_TeacherQuizId",
                         column: x => x.TeacherQuizId,
                         principalTable: "Quizzes",
                         principalColumn: "Id");
@@ -130,26 +175,6 @@ namespace QuizMaker.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Answer",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AText = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
-                    IsSelected = table.Column<bool>(type: "bit", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Answer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Answer_Question_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Question",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Answer_QuestionId",
                 table: "Answer",
@@ -166,34 +191,75 @@ namespace QuizMaker.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Quizzes_TeacherId",
+                table: "Quizzes",
+                column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Quizzes_TeacherId1",
                 table: "Quizzes",
                 column: "TeacherId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequiredStudent_TeacherQuizId",
-                table: "RequiredStudent",
+                name: "IX_Students_TeacherQuizId",
+                table: "Students",
                 column: "TeacherQuizId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeacherAnswers_StudentQuestionId",
+                table: "TeacherAnswers",
+                column: "StudentQuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestedStudent_TeacherQuizId",
                 table: "TestedStudent",
                 column: "TeacherQuizId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Answer_Question_QuestionId",
+                table: "Answer",
+                column: "QuestionId",
+                principalTable: "Question",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Question_Quizzes_QuizId",
+                table: "Question",
+                column: "QuizId",
+                principalTable: "Quizzes",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Quizzes_Students_StudentId",
+                table: "Quizzes",
+                column: "StudentId",
+                principalTable: "Students",
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Students_Quizzes_TeacherQuizId",
+                table: "Students");
+
+            migrationBuilder.DropTable(
+                name: "Admins");
+
             migrationBuilder.DropTable(
                 name: "Answer");
 
             migrationBuilder.DropTable(
-                name: "RequiredStudent");
+                name: "TeacherAnswers");
 
             migrationBuilder.DropTable(
                 name: "TestedStudent");
 
             migrationBuilder.DropTable(
                 name: "Question");
+
+            migrationBuilder.DropTable(
+                name: "StudentQuestions");
 
             migrationBuilder.DropTable(
                 name: "Quizzes");

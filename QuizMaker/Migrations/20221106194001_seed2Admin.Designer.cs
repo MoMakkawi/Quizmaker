@@ -12,8 +12,8 @@ using QuizMaker.Data;
 namespace QuizMaker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221026221049_Init")]
-    partial class Init
+    [Migration("20221106194001_seed2Admin")]
+    partial class seed2Admin
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,32 @@ namespace QuizMaker.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("QuizMaker.Identity.Admin", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Admins");
+                });
 
             modelBuilder.Entity("QuizMaker.Identity.Student", b =>
                 {
@@ -48,7 +74,12 @@ namespace QuizMaker.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("TeacherQuizId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherQuizId");
 
                     b.ToTable("Students");
                 });
@@ -142,42 +173,55 @@ namespace QuizMaker.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TeacherId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("Quizzes");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Quiz");
                 });
 
-            modelBuilder.Entity("QuizMaker.Models.RequiredStudent", b =>
+            modelBuilder.Entity("QuizMaker.Models.StudentQuestion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("Question")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("TeacherQuizId")
+                    b.HasKey("Id");
+
+                    b.ToTable("StudentQuestions");
+                });
+
+            modelBuilder.Entity("QuizMaker.Models.TeacherAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("StudentQuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TeacherId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherQuizId");
+                    b.HasIndex("StudentQuestionId");
 
-                    b.ToTable("RequiredStudent");
+                    b.ToTable("TeacherAnswers");
                 });
 
             modelBuilder.Entity("QuizMaker.Models.TestedStudent", b =>
@@ -232,6 +276,13 @@ namespace QuizMaker.Migrations
                     b.HasDiscriminator().HasValue("TeacherQuiz");
                 });
 
+            modelBuilder.Entity("QuizMaker.Identity.Student", b =>
+                {
+                    b.HasOne("QuizMaker.Models.TeacherQuiz", null)
+                        .WithMany("RequiredStudents")
+                        .HasForeignKey("TeacherQuizId");
+                });
+
             modelBuilder.Entity("QuizMaker.Models.Answer", b =>
                 {
                     b.HasOne("QuizMaker.Models.Question", null)
@@ -246,11 +297,26 @@ namespace QuizMaker.Migrations
                         .HasForeignKey("QuizId");
                 });
 
-            modelBuilder.Entity("QuizMaker.Models.RequiredStudent", b =>
+            modelBuilder.Entity("QuizMaker.Models.Quiz", b =>
                 {
-                    b.HasOne("QuizMaker.Models.TeacherQuiz", null)
-                        .WithMany("RequiredStudents")
-                        .HasForeignKey("TeacherQuizId");
+                    b.HasOne("QuizMaker.Identity.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("QuizMaker.Models.TeacherAnswer", b =>
+                {
+                    b.HasOne("QuizMaker.Models.StudentQuestion", "StudentQuestion")
+                        .WithMany()
+                        .HasForeignKey("StudentQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StudentQuestion");
                 });
 
             modelBuilder.Entity("QuizMaker.Models.TestedStudent", b =>

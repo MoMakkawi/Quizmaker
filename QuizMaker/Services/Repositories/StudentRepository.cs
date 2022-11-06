@@ -43,7 +43,7 @@ public class StudentRepository : IAsyncStudent
         {
             studentQuizzesResponses
                 .ElementAt(i)
-                .Teacher = await GetTeacherById(studentQuizzes.ElementAt(i).TeacherId!);
+                .Teacher = await GetTeacherById(studentQuizzes.ElementAt(i).TeacherId.ToString()!);
         }
 
         return studentQuizzesResponses;
@@ -53,7 +53,7 @@ public class StudentRepository : IAsyncStudent
     {
         StudentQuiz? studentQuiz = await _dbContext.StudentQuizzes!.FindAsync(request.Id);
         GetQuizByIdResponse response = _mapper.Map<GetQuizByIdResponse>(studentQuiz);
-        response.Teacher = await GetTeacherById(studentQuiz!.TeacherId!);
+        response.Teacher = await GetTeacherById(studentQuiz!.TeacherId.ToString()!);
 
         return response;
 

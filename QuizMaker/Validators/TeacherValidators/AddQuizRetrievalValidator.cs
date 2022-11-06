@@ -32,7 +32,6 @@ public class AddQuizRetrievalValidator : Validator<AddQuizRequest>
             .NotNull().WithMessage("students is null!")
             .NotEmpty().WithMessage("students is required!");
 
-        RuleForEach(x => x.RequiredStudents).SetValidator(new RequiredStudentValidator());
     }
 }
 

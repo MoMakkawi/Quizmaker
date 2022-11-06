@@ -9,6 +9,6 @@ public class GetQuizByIdResponse
     public int Duration { get; set; }
     public DateTime ExpiryDate { get; set; }
     public ICollection<Question>? Questions { get; set; }
-    public ICollection<RequiredStudent>? RequiredStudents { get; set; }
+    public ICollection<Guid>? RequiredStudents { get; set; }
     public ICollection<TestedStudent>? TestedStudents { get; set; }
 }

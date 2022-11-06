@@ -33,7 +33,5 @@ public class UpdateQuizRetrievalValidator : Validator<UpdateQuizRequest>
         RuleFor(x => x.RequiredStudents)
             .NotNull().WithMessage("students is null!")
             .NotEmpty().WithMessage("students is required!");
-
-        RuleForEach(x => x.RequiredStudents).SetValidator(new RequiredStudentValidator());
     }
 }
