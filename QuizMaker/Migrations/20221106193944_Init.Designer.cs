@@ -279,7 +279,7 @@ namespace QuizMaker.Migrations
             modelBuilder.Entity("QuizMaker.Identity.Student", b =>
                 {
                     b.HasOne("QuizMaker.Models.TeacherQuiz", null)
-                        .WithMany("RequiredStudents")
+                        .WithMany("RequiredStudentsIds")
                         .HasForeignKey("TeacherQuizId");
                 });
 
@@ -362,7 +362,7 @@ namespace QuizMaker.Migrations
 
             modelBuilder.Entity("QuizMaker.Models.TeacherQuiz", b =>
                 {
-                    b.Navigation("RequiredStudents");
+                    b.Navigation("RequiredStudentsIds");
 
                     b.Navigation("TestedStudents");
                 });

@@ -34,8 +34,7 @@ namespace QuizMaker.Services.Repositories
                 return response;
             }
 
-            UserDTO userDTO = _mapper.Map<UserDTO>(user);
-            response = _mapper.Map<GetUserByIdResponse>(userDTO);
+            response = _mapper.Map<GetUserByIdResponse>(user);
             response.IsExist = true;
 
             return response;
@@ -47,7 +46,9 @@ namespace QuizMaker.Services.Repositories
 
             LoginResponse resp = new();
 
-            User? user = await _dbContext.Teachers!
+            User? user = await _dbContext.Admins!
+                .FirstOrDefaultAsync(t => t.Email == loginRequest.Email && t.Password == loginRequest.Password);
+            user ??= await _dbContext.Teachers!
                 .FirstOrDefaultAsync(t => t.Email == loginRequest.Email && t.Password == loginRequest.Password);
             user ??= await _dbContext.Students!
                 .FirstOrDefaultAsync(s => s.Email == loginRequest.Email && s.Password == loginRequest.Password);
@@ -69,7 +70,8 @@ namespace QuizMaker.Services.Repositories
 
             RegisterResponse response = new();
 
-            if (await _dbContext.Teachers!.AnyAsync(t => t.Email == registerRequest.Email) ||
+            if (await _dbContext.Admins!.AnyAsync(a => a.Email == registerRequest.Email) ||
+                await _dbContext.Teachers!.AnyAsync(t => t.Email == registerRequest.Email) ||
                 await _dbContext.Students!.AnyAsync(s => s.Email == registerRequest.Email))
             {
                 response.ResponseMessage = "There is an account with this email .";

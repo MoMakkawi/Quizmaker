@@ -11,5 +11,5 @@ public class UpdateQuizRequest
     public UserDTO? Teacher { get; set; }
     public int Duration { get; set; }
     public DateTime ExpiryDate { get; set; }
-    public ICollection<Guid>? RequiredStudents { get; set; }
+    public ICollection<Guid>? RequiredStudentsIds { get; set; }
 }

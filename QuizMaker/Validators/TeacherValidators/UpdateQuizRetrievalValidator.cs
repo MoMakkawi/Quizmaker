@@ -30,7 +30,7 @@ public class UpdateQuizRetrievalValidator : Validator<UpdateQuizRequest>
             .NotEmpty().WithMessage("students is required!")
             .SetValidator(new UserDTOValidator()!);
 
-        RuleFor(x => x.RequiredStudents)
+        RuleFor(x => x.RequiredStudentsIds)
             .NotNull().WithMessage("students is null!")
             .NotEmpty().WithMessage("students is required!");
     }

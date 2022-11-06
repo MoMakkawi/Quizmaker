@@ -34,7 +34,8 @@ public class RegisterRetrevialValidator : Validator<RegisterRequest>
             .WithMessage("The password must contain symbols, numbers, uppercase and lowercase letters");
 
         RuleFor(x => x.Role)
-            .IsInEnum().WithMessage("role not found");
+            .IsInEnum().WithMessage("role not found")
+            .NotEqual(Identity.Role.Admin).WithMessage("you can not register as admin.");
     }
     private bool HasValidPassword(string? pw)
     {

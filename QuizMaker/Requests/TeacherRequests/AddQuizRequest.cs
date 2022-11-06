@@ -9,5 +9,5 @@ public class AddQuizRequest
     public DateTime CreationTime => DateTime.UtcNow;
     public int Duration { get; set; }
     public DateTime ExpiryDate { get; set; }
-    public ICollection<Guid>? RequiredStudents { get; set; }
+    public ICollection<Guid>? RequiredStudentsIds { get; set; }
 }

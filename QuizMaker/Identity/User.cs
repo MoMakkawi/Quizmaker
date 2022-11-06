@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace QuizMaker.Identity;
+﻿namespace QuizMaker.Identity;
 
 public class User
 {

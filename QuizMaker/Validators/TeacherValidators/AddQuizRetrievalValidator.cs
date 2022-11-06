@@ -28,7 +28,7 @@ public class AddQuizRetrievalValidator : Validator<AddQuizRequest>
             .GreaterThan(0)
             .WithMessage("please make sure quiz duration greater than zero .");
 
-        RuleFor(x => x.RequiredStudents)
+        RuleFor(x => x.RequiredStudentsIds)
             .NotNull().WithMessage("students is null!")
             .NotEmpty().WithMessage("students is required!");
 
