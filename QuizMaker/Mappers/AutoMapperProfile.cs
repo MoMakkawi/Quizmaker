@@ -40,6 +40,11 @@ public class AutoMapperProfile : Profile
             .ForMember(src => src.RequiredStudents, opt => opt.Ignore())
             .ReverseMap();
 
+        CreateMap<AnswerStudentQuestionRequest, TeacherAnswer>()
+            .ForMember(src => src.Id , opt => opt.Ignore())
+            .ReverseMap();
+
+
 
         //user mapping
         //CreateMap<User, UserDTO>()

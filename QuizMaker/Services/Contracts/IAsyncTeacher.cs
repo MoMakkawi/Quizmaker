@@ -5,6 +5,7 @@ namespace QuizMaker.Services.Contracts
 {
     public interface IAsyncTeacher
     {
+        Task<AnswerStudentQuestionRespose> AddAnswerStudentQuestionAsync(AnswerStudentQuestionRequest request);
         Task<AddQuizResponse> AddQuizAsync(AddQuizRequest request);
         Task DeleteQuizAsync(DeleteQuizRequest request);
         Task<List<GetAllQuizzesResponse>> GetAllQuizzesAsync(GetAllQuizzesRequest request);

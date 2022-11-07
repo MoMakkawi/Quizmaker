@@ -2,6 +2,8 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using NuGet.Packaging.Signing;
+
 using QuizMaker.Data;
 using QuizMaker.Identity;
 using QuizMaker.Models;
@@ -38,17 +40,6 @@ namespace QuizMaker.Services.Repositories
             AddQuizResponse response = new() { Id = TQuiz.Id };    
 
             return response;
-        }
-
-        private async Task<ICollection<Student>?> GetStudents(ICollection<Guid> StudentsIds)
-        {
-            var students = new List<Student>();
-            foreach (var studentId in StudentsIds!)
-            {
-                var student = await GetStudentById(studentId);
-                students.Add(student);
-            }
-            return students;
         }
 
         public async Task DeleteQuizAsync(DeleteQuizRequest request)
@@ -134,7 +125,16 @@ namespace QuizMaker.Services.Repositories
             UpdateQuizResponse response = new() { Id = teacherQuiz.Id };
             return response;
         }
+        public async Task<AnswerStudentQuestionRespose> AddAnswerStudentQuestionAsync(AnswerStudentQuestionRequest request)
+        {
 
+            TeacherAnswer answer = _mapper.Map<TeacherAnswer>(request);
+            await _dbContext.TeacherAnswers.AddAsync(answer);
+            await _dbContext.SaveChangesAsync();
+
+            AnswerStudentQuestionRespose response = new() { AnswerStudentQuestionId = answer.Id };
+            return response;
+        }
         #region Helper Methods
         private async Task<Student> GetStudentById(Guid id)
         {
@@ -147,6 +147,16 @@ namespace QuizMaker.Services.Repositories
             var student = _mapper.Map<Student>(getUserResponse);
 
             return student;
+        }
+        private async Task<ICollection<Student>?> GetStudents(ICollection<Guid> StudentsIds)
+        {
+            var students = new List<Student>();
+            foreach (var studentId in StudentsIds!)
+            {
+                var student = await GetStudentById(studentId);
+                students.Add(student);
+            }
+            return students;
         }
         #endregion
     }
