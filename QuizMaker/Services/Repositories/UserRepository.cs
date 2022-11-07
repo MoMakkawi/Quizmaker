@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-
 using Microsoft.EntityFrameworkCore;
 
 using QuizMaker.Data;
@@ -8,6 +7,8 @@ using QuizMaker.Models.DTOs;
 using QuizMaker.Requests.UserRequests;
 using QuizMaker.Responses.UserResponses;
 using QuizMaker.Services.Contracts;
+using System.Net.Mail;
+using FluentEmail.Core;
 
 namespace QuizMaker.Services.Repositories
 {
@@ -129,9 +130,28 @@ namespace QuizMaker.Services.Repositories
 
         public async Task<SendEmailResponse> SendEmail(SendEmailRequest sendEmailRequest)
         {
+
+
             SendEmailResponse response = new();
+            try
+            { 
+
+                var x = await Email
+                    .From(sendEmailRequest.From)
+                    .To(sendEmailRequest.To, new MailAddress(sendEmailRequest.To!).User)
+                    .Subject(sendEmailRequest.Subject)
+                    .Body(sendEmailRequest.Body)
+                    .SendAsync();
+
+
             response.ResponseMessage = "Message has been sent successfully .";
-            response.ResponseMessage = "An error occurred while sending the message .";
+            }
+            catch (Exception e)
+            {
+                response.ResponseMessage = "An error occurred while sending the message . \n" +
+                    $" Error : {e.Message}";
+            }
+
             return response;
         }
     }

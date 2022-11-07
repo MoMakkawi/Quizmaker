@@ -12,7 +12,7 @@ public class SendEmailEndPoint : Endpoint<SendEmailRequest, SendEmailResponse>
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("user/send/{From}/{To}/{Subject}/{Body}");
+        Routes("user/sendEmail");
         AllowAnonymous();
     }
 

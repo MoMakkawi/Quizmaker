@@ -8,6 +8,7 @@ using QuizMaker.Data;
 using QuizMaker.Services.Contracts;
 using QuizMaker.Services.Repositories;
 using FastEndpoints.Swagger;
+using System.Net.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFastEndpoints();
+builder.Services
+    .AddFluentEmail("Quiz.Maker.012@gmail.test")
+    .AddSmtpSender(new SmtpClient() { });
 
 //DI
 builder.Services.AddScoped(typeof(IAsyncUser), typeof(UserRepository));
