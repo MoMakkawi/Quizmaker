@@ -21,6 +21,39 @@ namespace QuizMaker.Services.Repositories
             _mapper = mapper;
         }
 
+        public async Task<GetStudentsQuestionsAndTeachersAnswersResponse> GetStudentsQuestionsAndTeachersAnswersAsync(GetStudentsQuestionsAndTeachersAnswersRequest request)
+        {
+            var respose = new GetStudentsQuestionsAndTeachersAnswersResponse();
+            respose.StudentQuestionAndTeaherAnswer = new List<StudentQuestionAndTeaherAnswerDTO>();
+
+            foreach (var studentquestion in _dbContext.StudentQuestions)
+            { 
+                var StudentQuestionAndTeaherAnswer = new StudentQuestionAndTeaherAnswerDTO()
+                {
+                    StudentId = new Guid(studentquestion.StudentId!),
+                    Question = studentquestion.Question,
+                };
+
+                var teacherAnswer = await _dbContext
+                    .TeacherAnswers
+                    .Where(a => a.StudentQuestionId == studentquestion.Id)
+                    .FirstOrDefaultAsync();
+
+                if (teacherAnswer is not null)
+                {
+                    StudentQuestionAndTeaherAnswer.TeacherId = teacherAnswer.StudentQuestionId;
+                    StudentQuestionAndTeaherAnswer.Answer = teacherAnswer.Answer;
+                }
+
+                respose
+                    .StudentQuestionAndTeaherAnswer!
+                    .Add(StudentQuestionAndTeaherAnswer);
+
+            }
+
+            return respose;
+        }
+
         public async Task<GetUserByIdResponse> GetUserById(GetUserByIdRequest getUserByIdRequest)
         {
             GetUserByIdResponse response = new();
