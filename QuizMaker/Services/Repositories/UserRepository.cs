@@ -22,6 +22,15 @@ namespace QuizMaker.Services.Repositories
             _mapper = mapper;
         }
 
+        public async Task<List<GetAllStudentsResponse>> GetAllStudents(GetAllStudentsRequest req)
+        {
+            List<Student> students = await _dbContext.Students!
+                .Where(s => s.Password != null)
+                .ToListAsync();
+            var response = _mapper.Map<List<GetAllStudentsResponse>>(students);
+            return response;
+        }
+
         public async Task<GetStudentsQuestionsAndTeachersAnswersResponse> GetStudentsQuestionsAndTeachersAnswersAsync(GetStudentsQuestionsAndTeachersAnswersRequest request)
         {
             var respose = new GetStudentsQuestionsAndTeachersAnswersResponse();

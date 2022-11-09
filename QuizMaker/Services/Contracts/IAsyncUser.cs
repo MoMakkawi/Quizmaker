@@ -11,5 +11,6 @@ namespace QuizMaker.Services.Contracts
         Task<RegisterResponse> Register(RegisterRequest registerRequest);
         Task<SendEmailResponse> SendEmail(SendEmailRequest sendEmailRequest);
         Task<GetUserByIdResponse> GetUserById (GetUserByIdRequest getUserByIdRequest);
+        Task<List<GetAllStudentsResponse>> GetAllStudents(GetAllStudentsRequest req);
     }
 }

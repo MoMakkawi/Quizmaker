@@ -97,10 +97,10 @@ namespace QuizMaker.Services.Repositories
                 return response;
             }
 
-            double studentsAvarage = requiredStudentsCount / testedStudentsCount;
+            double studentsAvarage = testedStudentsCount / requiredStudentsCount;
 
             double marks = TeacherQuiz.TestedStudents!.Sum(ts => ts.Mark);
-            double marksAvarage = marks / testedStudentsCount;
+            double marksAvarage = marks / testedStudentsCount * 100;
 
             response = new()
             {

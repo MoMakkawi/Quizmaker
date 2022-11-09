@@ -8,6 +8,7 @@ public class AddQuizRequest
     public Guid TeacherId { get; set; }
     public DateTime CreationTime => DateTime.UtcNow;
     public int Duration { get; set; }
+    public bool IsLevelQuiz { get; set; }
     public DateTime ExpiryDate { get; set; }
     public ICollection<Guid>? RequiredStudentsIds { get; set; }
 }

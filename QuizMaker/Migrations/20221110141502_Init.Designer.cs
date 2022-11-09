@@ -12,7 +12,7 @@ using QuizMaker.Data;
 namespace QuizMaker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221106193944_Init")]
+    [Migration("20221110141502_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,6 +173,9 @@ namespace QuizMaker.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsLevelQuiz")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("TeacherId")
                         .HasColumnType("uniqueidentifier");
 
@@ -279,7 +282,7 @@ namespace QuizMaker.Migrations
             modelBuilder.Entity("QuizMaker.Identity.Student", b =>
                 {
                     b.HasOne("QuizMaker.Models.TeacherQuiz", null)
-                        .WithMany("RequiredStudentsIds")
+                        .WithMany("RequiredStudents")
                         .HasForeignKey("TeacherQuizId");
                 });
 
@@ -362,7 +365,7 @@ namespace QuizMaker.Migrations
 
             modelBuilder.Entity("QuizMaker.Models.TeacherQuiz", b =>
                 {
-                    b.Navigation("RequiredStudentsIds");
+                    b.Navigation("RequiredStudents");
 
                     b.Navigation("TestedStudents");
                 });

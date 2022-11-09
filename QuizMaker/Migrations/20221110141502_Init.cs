@@ -110,6 +110,7 @@ namespace QuizMaker.Migrations
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsLevelQuiz = table.Column<bool>(type: "bit", nullable: false),
                     TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Mark = table.Column<double>(type: "float", nullable: true),

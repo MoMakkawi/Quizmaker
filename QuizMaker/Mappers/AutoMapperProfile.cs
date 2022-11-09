@@ -47,8 +47,6 @@ public class AutoMapperProfile : Profile
 
 
         //user mapping
-        //CreateMap<User, UserDTO>()
-        //    .ReverseMap();
         CreateMap<User, Teacher>()
             .ReverseMap();
         CreateMap<UserDTO, Teacher>()
@@ -56,6 +54,9 @@ public class AutoMapperProfile : Profile
         CreateMap<User, Student>()
             .ReverseMap();
         CreateMap<UserDTO, Student>()
+            .ReverseMap();
+
+        CreateMap<GetAllStudentsResponse, Student>()
             .ReverseMap();
 
         CreateMap<Teacher, GetUserByIdResponse>()

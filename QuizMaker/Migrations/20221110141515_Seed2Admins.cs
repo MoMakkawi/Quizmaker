@@ -4,7 +4,7 @@
 
 namespace QuizMaker.Migrations
 {
-    public partial class seed2Admin : Migration
+    public partial class Seed2Admins : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
