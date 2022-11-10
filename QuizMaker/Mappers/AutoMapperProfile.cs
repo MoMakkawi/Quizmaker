@@ -67,6 +67,16 @@ public class AutoMapperProfile : Profile
 
         CreateMap<UserDTO, GetUserByIdResponse>()
             .ReverseMap();
+
+        CreateMap<Admin, LoginResponse>()
+            .ReverseMap();
+
+        CreateMap<Teacher, LoginResponse>()
+            .ReverseMap();
+
+        CreateMap<Student, LoginResponse>()
+            .ReverseMap();
+
         CreateMap<RegisterRequest, User>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => new Guid()));
 

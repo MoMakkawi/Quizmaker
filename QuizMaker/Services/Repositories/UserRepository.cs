@@ -97,12 +97,20 @@ namespace QuizMaker.Services.Repositories
                 .FirstOrDefaultAsync(s => s.Email == loginRequest.Email && s.Password == loginRequest.Password);
 
             if (user is null)
+            {
+                //resp.IsExist = false by defult  
                 resp.ResponseMessage = "There is no account with this information, please check your email and password";
-            else if (user!.Role == Role.Admin)
+                return resp;
+            }
+
+            resp = _mapper.Map<LoginResponse>(user);
+            resp.IsExist = true;
+            if (user!.Role == Role.Admin)
                 resp.ResponseMessage = $"Welcome Admin. {user.FirstName} {user.LastName}";
             else if (user!.Role == Role.Teacher)
                 resp.ResponseMessage = $"Welcome Mr. {user.FirstName} {user.LastName}";
             else resp.ResponseMessage = $"Welcome student , {user.FirstName} {user.LastName}";
+
 
             return resp;
 
