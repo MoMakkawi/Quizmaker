@@ -62,25 +62,25 @@ public class StudentRepository : IAsyncStudent
     public async Task<SolveQuizResponse> SolveQuiz(SolveQuizRequest request)
     {
         double mark = GetMark(request.Answers!);
-        Level level = GetLevel(mark);
-
-        SolveQuizResponse response = new() { Mark = mark };
 
         TeacherQuiz? teacherQuiz = await _dbContext.TeacherQuizzes!.FindAsync(request.TeacherQuizId);
-        if (teacherQuiz is null) return response;
   
-        teacherQuiz.TestedStudents!
+        teacherQuiz!.TestedStudents!
             .Add(GetTestedStudent(request , mark));
 
         await _dbContext.StudentQuizzes!
             .AddAsync(GetStudentQuiz(teacherQuiz, mark , request.Answers!));
 
 
-        if (request.IsLevelQuiz) UpdateStudentLevel(request.StudentId, level);
+        if (request.IsLevelQuiz)
+        {
+            Level level = GetLevel(mark);
+            UpdateStudentLevel(request.StudentId, level);
+        }
 
         await _dbContext.SaveChangesAsync();
-        
-        
+
+        SolveQuizResponse response = new() { Mark = mark };
         return response;
     }
 
