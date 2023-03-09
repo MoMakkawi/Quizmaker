@@ -1,4 +1,4 @@
-# Quizmaker
+# QuizMaker
 
 ### Summary :
 Minimal API deals to determine students' levels of English by making quizzes, in this project we will be based on REPR pattern
@@ -12,7 +12,14 @@ As for the third role, it is the teacher who is able to manage his tests and con
 Note : The teacher and the student are able to send emails.
 
 ### About techniques :
-You will see many techniques that were used in this project some of them are: Minimal API , Request Endpoint Response pattern , FastEndPoint , FluentValidation , FluentEmail , AutoMapper , entity framework .
+You will see many techniques that were used in this project some of them are:
+* Minimal API 
+* Request Endpoint Response pattern 
+* FastEndPoint 
+* FluentValidation 
+* FluentEmail 
+* AutoMapper 
+* Entity Framework .
 
 ### System Modeling :
 ![AddQuizSequanceDiagram](https://user-images.githubusercontent.com/94985793/223993762-9ee7aa61-94d0-44ed-be97-b7738f1460a1.jpg)
